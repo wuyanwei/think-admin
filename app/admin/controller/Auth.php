@@ -15,8 +15,8 @@ declare(strict_types=1);
 namespace app\admin\controller;
 
 use think\Response;
-use xiaodi\Facade\Jwt;
 use app\BaseController;
+use xiaodi\JWTAuth\Facade\Jwt;
 use app\admin\service\UserService;
 
 class Auth extends BaseController
@@ -38,32 +38,38 @@ class Auth extends BaseController
 
         $token = (string) $service->makeToken($user);
 
-        return $this->sendSuccess(['token' => $token, 'token_type' => Jwt::type(), 'expires_in' => Jwt::ttl()]);
+        return $this->sendSuccess([
+            'token'      => $token,
+            'token_type' => Jwt::type(),
+            'expires_in' => Jwt::ttl(),
+            'refresh_in' => Jwt::refreshTTL(),
+        ]);
     }
 
     /**
      * 刷新Token.
      *
-     * @param string $token
      * @return Response
      */
-    public function refreshToken($token)
+    public function refreshToken()
     {
-        $token = Jwt::parse($token);
-
         return $this->sendSuccess([
-            'token' => (string) Jwt::refresh($token),
+            'token'      => (string) Jwt::refresh(),
             'token_type' => Jwt::type(),
             'expires_in' => Jwt::ttl(),
+            'refresh_in' => Jwt::refreshTTL(),
         ]);
     }
 
     /**
      * 退出登录.
+     *
+     * @return Response
      */
     public function logout()
     {
-        // TODO
+        Jwt::logout();
+
         return $this->sendSuccess();
     }
 }

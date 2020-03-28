@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Jwt 配置.
- */
-
-declare(strict_types=1);
-
 /*
  * This file is part of TAnt.
  * @link     https://github.com/edenleung/think-admin
@@ -17,15 +11,24 @@ declare(strict_types=1);
  */
 
 return [
-    'sso'         => false,
-    'ssoCacheKey' => 'jwt-auth-user',
-    'ssoKey'      => 'uid',
-    'signerKey'   => 'RvAjzUhtJs',
-    'notBefore'   => 0,
-    'expiresAt'   => 3600,
-    'signer'      => 'Lcobucci\JWT\Signer\Hmac\Sha256',
-    'injectUser'  => true,
-    'userModel'   => \app\common\model\User::class,
-    'hasLogged'   => 50401,
-    'tokenAlready' => 50402,
+    'default' => [
+        'uniqidKey'    => 'uid',
+        'signerKey'    => 'RvAjzUhtJs',
+        'notBefore'    => 0,
+        'expiresAt'    => 3600,
+        'refreshTTL'   => 7200,
+        'signer'       => 'Lcobucci\JWT\Signer\Hmac\Sha256',
+        'type'         => 'Header',
+        'refresh'      => 50001,
+        'relogin'      => 50002,
+        'iss'          => '',
+        'aud'          => '',
+    ],
+    'user' => [
+        'inject' => true,
+        'model'  => 'app\common\model\User',
+    ],
+    'blacklist' => [
+        'cacheName' => 'blacklist',
+    ],
 ];
